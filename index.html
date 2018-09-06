@@ -1,0 +1,100 @@
+<html>
+    <head>
+        <script
+            src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+
+    <body>
+        
+
+        <div id="toDoListParent">
+            <h1>To-Do List</h1>
+            <button class="btn btn-primary" id="addItemButton">Add Item</button>
+            <button class="btn btn-primary" id="clearItemButton">Clear</button>
+            <br>
+            <br>
+        </div>
+
+        <script>
+            document.getElementById('addItemButton').onclick = () => {
+                var newItem = prompt('What do you want to do?');
+                let newObject = {
+                    'task': newItem,
+                    'completed': false
+                };
+                displayToDoList.push(newObject);
+                window.localStorage.setItem('TODO_LIST', JSON.stringify(displayToDoList));
+                toDoList = JSON.parse(window.localStorage.getItem('TODO_LIST'));
+                location.reload();
+            }
+            document.getElementById('clearItemButton').onclick = () => {
+                window.localStorage.removeItem('TODO_LIST');
+                location.reload();
+            }
+            var toDoList = JSON.parse(window.localStorage.getItem('TODO_LIST'));
+            var toDoListParent = document.getElementById('toDoListParent');
+            var displayToDoList;
+            var exampleToDoList = [
+                {
+                    'task': 'Do laundry.',
+                    'completed': false
+                },
+                {
+                    'task': 'Do dishes.',
+                    'completed': false
+                },
+                {
+                    'task': 'Get groceries.',
+                    'completed': false
+                },
+                {
+                    'task': 'Make tutorial.',
+                    'completed': false
+                }
+            ];
+            if(toDoList) {
+                displayToDoList = toDoList;
+            } else {
+                displayToDoList = exampleToDoList;
+            }
+            for(let i = 0; i < displayToDoList.length; i++) {
+                var tempDiv = document.createElement('div');
+                tempDiv.className = 'taskItem';
+
+                console.log(displayToDoList[i]);
+
+                if(displayToDoList[i].completed === true) {
+                    console.log('adding class');
+                    tempDiv.classList.add('task-complete');
+                }
+                tempDiv.innerHTML = displayToDoList[i].task;
+                toDoListParent.appendChild(tempDiv);
+            }
+
+
+            var taskItems = document.getElementsByClassName('taskItem');
+            for(let i = 0; i < taskItems.length; i++) {
+                taskItems[i].onclick = () => {
+                    let itemClickedText = taskItems[i].innerHTML.toLowerCase();
+                    console.log(itemClickedText);
+                    for(let j = 0; j < displayToDoList.length; j++) {
+                        if(displayToDoList[j].task.toLowerCase() === itemClickedText) {
+                            displayToDoList[j].completed = !displayToDoList[j].completed;
+                        }
+                    }
+                    console.log(displayToDoList);
+                    window.localStorage.setItem('TODO_LIST', JSON.stringify(displayToDoList));
+                    location.reload();
+                }
+            }
+        </script>
+    </body>
+
+</html>
